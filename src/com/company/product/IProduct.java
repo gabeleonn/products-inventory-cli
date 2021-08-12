@@ -23,11 +23,9 @@ public interface IProduct {
 
     void setName(String name);
 
-    BigDecimal getPrice();
+    Double getPrice();
 
-    void setPrice(BigDecimal price);
-
-    void setPrice(int price);
+    void setPrice(Double price);
 
     String getUnit();
 

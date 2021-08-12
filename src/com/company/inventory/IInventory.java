@@ -12,7 +12,9 @@ public interface IInventory {
 
     List<Product> findAll();
 
-    void update(Product product);
+    void update(Product newProduct, Product oldProduct);
 
     void delete(String name);
+
+    boolean exists(String name);
 }

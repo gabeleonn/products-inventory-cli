@@ -25,6 +25,12 @@ public class Screen {
             case "products-read":
                 show("CONSULTA DE PRODUTO\n");
                 break;
+            case "products-update":
+                show("ALTERAÇÃO DE PRODUTO\n");
+                break;
+            case "products-delete":
+                show("EXCLUSÃO DE PRODUTO\n");
+                break;
             case "inventory":
                 show("MOVIMENTAÇÃO\n");
                 show(

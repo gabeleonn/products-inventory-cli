@@ -35,19 +35,25 @@ public class Inventory implements IInventory {
     }
 
     @Override
-    public void update(Product updated) {
-        Product old = this.findOne(updated.getName());
-        old.setPrice(updated.getPrice());
-        old.setQuantity(updated.getQuantity());
-        old.setUnit(updated.getUnit());
-        this.products = this.products.stream().map(
-                product -> {
-                    if(product.getName().equals(updated.getName())) {
-                        return old;
-                    } else {
-                        return product;
-                    }
-                }).collect(Collectors.toList());
+    public boolean exists(String name) {
+        return this.products.stream().anyMatch(product -> product.getName().equals(name));
+    };
+
+    @Override
+    public void update(Product newProduct, Product oldProduct) {
+        if (newProduct.getName().equals(oldProduct.getName())) {
+            this.products = this.products.stream().map(
+                    product -> {
+                        if(product.getName().equals(newProduct.getName())) {
+                            return newProduct;
+                        } else {
+                            return product;
+                        }
+                    }).collect(Collectors.toList());
+        } else {
+            this.products.removeIf(product -> product.getName().equals(oldProduct.getName()));
+            this.create(newProduct);
+        }
     }
 
     @Override
