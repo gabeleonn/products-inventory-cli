@@ -1,23 +1,20 @@
 package com.company.product;
 
-import java.math.BigDecimal;
+import com.company.utils.Screen;
 
 public interface IProduct {
-    private String validateName(String name) {
-        return null;
-    }
 
-    private BigDecimal validatePrice(Double price) {
-        return null;
-    }
+    Product builder(Screen screen);
 
-    private String validateUnit(String unit) {
-        return null;
-    }
+    Product update(Screen screen);
 
-    private int validateQuantity(int quantity) {
-        return 0;
-    }
+    String getValidName(Screen screen);
+
+    Double getValidPrice(Screen screen);
+
+    String getValidUnit(Screen screen);
+
+    int getValidQuantity(Screen screen);
 
     String getName();
 

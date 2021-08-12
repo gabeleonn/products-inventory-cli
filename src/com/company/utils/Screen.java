@@ -3,7 +3,7 @@ package com.company.utils;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class Screen {
+public class Screen implements IScreen {
     private Scanner read = new Scanner(System.in);
 
     public void showScreen(String screen) {
@@ -138,7 +138,7 @@ public class Screen {
         return this.read.nextDouble();
     }
 
-    public void clearScanner() {
+    private void clearScanner() {
         this.read = null;
         this.read = new Scanner(System.in);
     }

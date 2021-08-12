@@ -37,7 +37,7 @@ public class Product implements IProduct {
         return newProduct;
     }
 
-    private String getValidName(Screen screen) {
+    public String getValidName(Screen screen) {
         boolean isValid = false;
         String name = "";
         while(!isValid) {
@@ -58,7 +58,7 @@ public class Product implements IProduct {
         return name;
     }
 
-    private Double getValidPrice(Screen screen) {
+    public Double getValidPrice(Screen screen) {
         boolean isValid = false;
         Double price = 0.00;
         while(!isValid) {
@@ -90,7 +90,7 @@ public class Product implements IProduct {
         return price;
     }
 
-    private String getValidUnit(Screen screen) {
+    public String getValidUnit(Screen screen) {
         boolean isValid = false;
         List<String> validUnits = Arrays.asList("kilo", "grama", "litro", "mililitro", "unidade" );
         String unit = null;
@@ -113,7 +113,7 @@ public class Product implements IProduct {
         return unit;
     }
 
-    private int getValidQuantity(Screen screen) {
+    public int getValidQuantity(Screen screen) {
         boolean isValid = false;
         int quantity = 0;
         while(!isValid) {
