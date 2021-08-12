@@ -37,7 +37,26 @@ public class Inventory implements IInventory {
     @Override
     public boolean exists(String name) {
         return this.products.stream().anyMatch(product -> product.getName().equals(name));
-    };
+    }
+
+    @Override
+    public void raiseQuantity(Product product, int quantity) {
+        product.setQuantity(product.getQuantity() + quantity);
+    }
+
+    public void lowerQuantity(Product product, int quantity) {
+        product.setQuantity(product.getQuantity() - quantity);
+    }
+
+    @Override
+    public void raisePrice(Product product, Double percentage) {
+        product.setPrice(product.getPrice() + (product.getPrice() * (percentage / 100)));
+    }
+
+    @Override
+    public void lowerPrice(Product product, Double percentage) {
+        product.setPrice(product.getPrice() - (product.getPrice() * (percentage / 100)));
+    }
 
     @Override
     public void update(Product newProduct, Product oldProduct) {

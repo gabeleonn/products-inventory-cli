@@ -6,14 +6,18 @@ import com.company.utils.Screen;
 import java.util.*;
 
 public class Product implements IProduct {
-    private final Inventory inventory = new Inventory();
+    private Inventory inventory;
 
     private String name;
     private Double price;
     private String unit;
-    private int quantity;
+    private int quantity = 0;
 
     public Product() {
+    }
+
+    public Product(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     public Product builder(Screen screen) {
@@ -25,11 +29,12 @@ public class Product implements IProduct {
     }
 
     public Product update(Screen screen) {
-        this.name = this.getValidName(screen);
-        this.price = this.getValidPrice(screen);
-        this.unit = this.getValidUnit(screen);
-        this.quantity = this.getValidQuantity(screen);
-        return this;
+        Product newProduct = new Product(inventory);
+        newProduct.setName(this.getValidName(screen));
+        newProduct.setPrice(this.getValidPrice(screen));
+        newProduct.setUnit(this.getValidUnit(screen));
+        newProduct.setQuantity(this.getValidQuantity(screen));
+        return newProduct;
     }
 
     private String getValidName(Screen screen) {
@@ -44,8 +49,11 @@ public class Product implements IProduct {
             } else {
                 name = screen.getInputString("Nome: ");
             }
-            isValid = !inventory.exists(name) && !name.isBlank();
-
+            if(!inventory.exists(name) && !name.isBlank()) {
+                isValid = true;
+            } else {
+                screen.show(String.format("Nome %s já em uso", name));
+            }
         }
         return name;
     }

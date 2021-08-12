@@ -39,6 +39,36 @@ public class Screen {
                     "0 - RETORNAR"
                 );
                 break;
+            case "inventory-in":
+                show("ENTRADA DE PRODUTO\n");
+                break;
+            case "inventory-out":
+                show("SAÍDA DE PRODUTO\n");
+                break;
+            case "price":
+                show("AJUSTE DE PREÇO\n");
+                show(
+                        "1 - AUMENTO\n" +
+                        "2 - REDUÇÃO\n" +
+                        "0 - RETORNAR"
+                );
+                break;
+            case "price-raise":
+                show("AUMENTO DE PREÇO\n");
+                break;
+            case "price-lower":
+                show("REDUÇÃO DE PREÇO\n");
+                break;
+            case "report":
+                show("RELATÓRIOS\n");
+                show(
+                        "1 - PRINCIPAL\n" +
+                        "0 - RETORNAR"
+                );
+                break;
+            case "report-main":
+                show("RELATÓRIO PRINCIPAL\n");
+                break;
             default:
                 show("MENU PRINCIPAL\n");
                 show(

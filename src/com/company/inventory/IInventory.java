@@ -17,4 +17,12 @@ public interface IInventory {
     void delete(String name);
 
     boolean exists(String name);
+
+    void raiseQuantity(Product product, int quantity);
+
+    void lowerQuantity(Product product, int quantity);
+
+    void raisePrice(Product product, Double percentage);
+
+    void lowerPrice(Product product, Double percentage);
 }
