@@ -2,7 +2,7 @@ package com.company;
 
 import com.company.inventory.Inventory;
 import com.company.product.Product;
-import com.company.utils.Screen;
+import com.company.utils.Screen.Screen;
 
 import java.util.List;
 
@@ -11,15 +11,19 @@ public class Main {
     private static final Inventory inventory = new Inventory();
 
     public static void main(String[] args) {
-        try {
-            while (true) {
+        boolean keep = true;
+
+        do {
+            try {
                 screen.showScreen("main");
                 int option = screen.getInput();
                 handleMainMenuOption(option);
+
+            } catch (Exception e) {
+                screen.validation.setMessage("Opção inválida, tente novamente.");
             }
-        } catch (Exception e) {
-            screen.show("Opa, parece que algo ocorreu de errado. Recomece o sistema.");
-        }
+
+        } while (keep);
     }
 
     private static void handleReportOptions(int option) {
@@ -31,19 +35,13 @@ public class Main {
                     List<Product> products = inventory.findAll();
                     if(products.size() > 0) {
                         products.forEach(System.out::println);
+
+                        if (screen.getRepeatOperation() == 0) {
+                            keepOne = false;
+                            handleMainMenuOption(4);
+                        }
                     } else {
-                        screen.show("Nenhum produto cadastrado.");
-                    }
-
-                    // It makes no sense to ask to repeat
-                    // however is better than just skipping ahead.
-
-                    int repeat = screen.getRepeatOperation();
-                    if (repeat == -1) {
-                        keepOne = false;
-                        screen.show("Opção inválida. Voltando ao menu.");
-                        handleMainMenuOption(4);
-                    } else if (repeat == 0) {
+                        screen.validation.setMessage("Nenhum produto cadastrado.");
                         keepOne = false;
                         handleMainMenuOption(4);
                     }
@@ -71,31 +69,29 @@ public class Main {
                     if (product != null) {
                         screen.show(product.toString());
                         screen.show("Preço atual: " + product.getPrice());
-                        double price = screen.getInputFloat("Porcentagem de aumento (ex: 1 para 1%): ");
-                        while (price <= 0) {
-                            screen.show("Quantidade deve ser maior que zero.");
-                            price = screen.getInputFloat("Porcentagem de aumento (ex: 1 para 1%): ");
-                        }
+
+                        double price = 0.0;
+                        do {
+                            try {
+                                price = screen.getInputFloat("Porcentagem de aumento (ex: 1 para 1%): ");
+                                if(price <= 0) {
+                                    screen.show("O valor deve ser maior que zero.");
+                                }
+                            } catch (Exception e) {
+                                screen.show("Entrada deve ser numérica.");
+                            }
+                        } while (price <= 0);
 
                         screen.show("Preço final: " + (product.getPrice() + (product.getPrice() * (price / 100))));
 
-                        int confirm = screen.getInputConfirmation();
-                        if (confirm == 1) {
+                        if (screen.getInputConfirmation() == 1) {
                             inventory.raisePrice(product, price);
-                        } else if (confirm == -1) {
-                            keepOne = false;
-                            screen.show("Opção inválida. Voltando ao menu.");
-                            handleMainMenuOption(3);
                         }
                     } else {
                         screen.show("Produto não encontrado.");
                     }
-                    int repeat = screen.getRepeatOperation();
-                    if (repeat == -1) {
-                        keepOne = false;
-                        screen.show("Opção inválida. Voltando ao menu.");
-                        handleMainMenuOption(3);
-                    } else if (repeat == 0) {
+
+                    if (screen.getRepeatOperation() == 0) {
                         keepOne = false;
                         handleMainMenuOption(3);
                     }
@@ -110,32 +106,34 @@ public class Main {
 
                     if (product != null) {
                         screen.show(product.toString());
-                        screen.show("Preço atual: " + product.getQuantity());
-                        Double price = screen.getInputFloat("Porcentagem de aumento (ex: 1 para 1%): ");
-                        while (price <= 0) {
-                            screen.show("Não utilize números negativos ou zero.");
-                            price = screen.getInputFloat("Porcentagem de aumento (ex: 1 para 1%): ");
-                        }
+                        screen.show("Preço atual: " + product.getPrice());
+
+                        Double price = 0.0;
+                        do {
+                            try {
+                                price = screen.getInputFloat("Porcentagem de redução (ex: 1 para 1%): ");
+                                if (price <= 0) {
+                                    screen.show("Não utilize números negativos ou zero.");
+                                } else if (price > 100) {
+                                    screen.show("A redução não pode ser maior que o 100%");
+                                }
+                            } catch (Exception e) {
+                                screen.show("A entrada deve ser numérica");
+                            }
+
+                        } while(price <= 0 || price > 100);
 
                         screen.show("Preço final: " + (product.getPrice() - (product.getPrice() * (price / 100))));
 
-                        int confirm = screen.getInputConfirmation();
-                        if (confirm == 1) {
+                        if (screen.getInputConfirmation() == 1) {
                             inventory.lowerPrice(product, price);
-                        } else if (confirm == -1) {
-                            keepTwo = false;
-                            screen.show("Opção inválida. Voltando ao menu.");
-                            handleMainMenuOption(3);
                         }
+
                     } else {
                         screen.show("Produto não encontrado.");
                     }
-                    int repeat = screen.getRepeatOperation();
-                    if (repeat == -1) {
-                        keepTwo = false;
-                        screen.show("Opção inválida. Voltando ao menu.");
-                        handleMainMenuOption(3);
-                    } else if (repeat == 0) {
+
+                    if (screen.getRepeatOperation() == 0) {
                         keepTwo = false;
                         handleMainMenuOption(3);
                     }
@@ -169,23 +167,14 @@ public class Main {
 
                         screen.show("Quantidade final: " + (product.getQuantity() + quantity));
 
-                        int confirm = screen.getInputConfirmation();
-                        if (confirm == 1) {
+                        if (screen.getInputConfirmation() == 1) {
                             inventory.raiseQuantity(product, quantity);
-                        } else if (confirm == -1) {
-                            keepOne = false;
-                            screen.show("Opção inválida. Voltando ao menu.");
-                            handleMainMenuOption(2);
                         }
                     } else {
                         screen.show("Produto não encontrado.");
                     }
-                    int repeat = screen.getRepeatOperation();
-                    if (repeat == -1) {
-                        keepOne = false;
-                        screen.show("Opção inválida. Voltando ao menu.");
-                        handleMainMenuOption(2);
-                    } else if (repeat == 0) {
+
+                    if (screen.getRepeatOperation() == 0) {
                         keepOne = false;
                         handleMainMenuOption(2);
                     }
@@ -198,34 +187,33 @@ public class Main {
                     String name = screen.getInputString("Digite o nome do produto: ");
                     Product product = inventory.findOne(name);
 
-                    if (product != null) {
+                    if (product != null && product.getQuantity() > 0) {
                         screen.show(product.toString());
                         screen.show("Quantidade atual: " + product.getQuantity());
                         int quantity = screen.getInputInt("Quantidade de saída: ");
-                        while (quantity <= 0) {
-                            screen.show("Não utilize números negativos ou zero.");
+                        while (quantity <= 0 || quantity > product.getQuantity()) {
+                            screen.show(
+                                quantity <= 0 ?
+                                    "Não utilize números negativos ou zero." :
+                                    "A saída não pode ser maior que a quantidade em estoque."
+                            );
                             quantity = screen.getInputInt("Quantidade de saída: ");
                         }
 
-                        screen.show("Quantidade final: " + (product.getQuantity() + quantity));
+                        screen.show("Quantidade final: " + (product.getQuantity() - quantity));
 
-                        int confirm = screen.getInputConfirmation();
-                        if (confirm == 1) {
+                        if (screen.getInputConfirmation() == 1) {
                             inventory.lowerQuantity(product, quantity);
-                        } else if (confirm == -1) {
-                            keepTwo = false;
-                            screen.show("Opção inválida. Voltando ao menu.");
-                            handleMainMenuOption(2);
                         }
                     } else {
-                        screen.show("Produto não encontrado.");
+                        if (product == null) {
+                            screen.show("Produto não encontrado.");
+                        } else {
+                            screen.show(String.format("Produto %s está sem estoque.", product.getName()));
+                        }
                     }
-                    int repeat = screen.getRepeatOperation();
-                    if (repeat == -1) {
-                        keepTwo = false;
-                        screen.show("Opção inválida. Voltando ao menu.");
-                        handleMainMenuOption(2);
-                    } else if (repeat == 0) {
+
+                    if (screen.getRepeatOperation() == 0) {
                         keepTwo = false;
                         handleMainMenuOption(2);
                     }
@@ -246,22 +234,14 @@ public class Main {
                 while (keepOne) {
                     screen.showScreen("products-create");
                     Product product = new Product(inventory).builder(screen);
-                    int confirm = screen.getInputConfirmation();
-                    if (confirm == 1) {
+
+                    if (screen.getInputConfirmation() == 1) {
                         inventory.create(product);
-                        int repeat = screen.getRepeatOperation();
-                        if (repeat == -1) {
-                            keepOne = false;
-                            screen.show("Opção inválida. Voltando ao menu.");
-                            handleMainMenuOption(1);
-                        } else if (repeat == 0) {
+
+                        if (screen.getRepeatOperation() == 0) {
                             keepOne = false;
                             handleMainMenuOption(1);
                         }
-                    } else if (confirm == -1) {
-                        keepOne = false;
-                        screen.show("Opção inválida. Voltando ao menu.");
-                        handleMainMenuOption(1);
                     }
                 }
             }
@@ -274,23 +254,14 @@ public class Main {
 
                     if (oldProduct != null) {
                         Product newProduct = oldProduct.update(screen);
-                        int confirm = screen.getInputConfirmation();
-                        if (confirm == 1) {
+                        if (screen.getInputConfirmation() == 1) {
                             inventory.update(newProduct, oldProduct);
-                        } else if (confirm == -1) {
-                            keepTwo = false;
-                            screen.show("Opção inválida. Voltando ao menu.");
-                            handleMainMenuOption(1);
                         }
                     } else {
                         screen.show("Produto não encontrado.");
                     }
-                    int repeat = screen.getRepeatOperation();
-                    if (repeat == -1) {
-                        keepTwo = false;
-                        screen.show("Opção inválida. Voltando ao menu.");
-                        handleMainMenuOption(1);
-                    } else if (repeat == 0) {
+
+                    if (screen.getRepeatOperation() == 0) {
                         keepTwo = false;
                         handleMainMenuOption(1);
                     }
@@ -307,12 +278,8 @@ public class Main {
                     } else {
                         screen.show("Produto não encontrado.");
                     }
-                    int repeat = screen.getRepeatOperation();
-                    if (repeat == -1) {
-                        keepThree = false;
-                        screen.show("Opção inválida. Voltando ao menu principal.");
-                        handleMainMenuOption(1);
-                    } else if (repeat == 0) {
+
+                    if (screen.getRepeatOperation() == 0) {
                         keepThree = false;
                         handleMainMenuOption(1);
                     }
@@ -326,23 +293,14 @@ public class Main {
                     Product product = inventory.findOne(name);
                     if (product != null) {
                         screen.show(product.toString());
-                        int confirm = screen.getInputConfirmation();
-                        if (confirm == 1) {
+                        if (screen.getInputConfirmation() == 1) {
                             inventory.delete(name);
-                        } else if (confirm == -1) {
-                            keepFour = false;
-                            screen.show("Opção inválida. Voltando ao menu principal.");
-                            handleMainMenuOption(1);
                         }
                     } else {
                         screen.show("Produto não encontrado.");
                     }
-                    int repeat = screen.getRepeatOperation();
-                    if (repeat == -1) {
-                        keepFour = false;
-                        screen.show("Opção inválida. Voltando ao menu.");
-                        handleMainMenuOption(1);
-                    } else if (repeat == 0) {
+
+                    if (screen.getRepeatOperation() == 0) {
                         keepFour = false;
                         handleMainMenuOption(1);
                     }
@@ -363,25 +321,60 @@ public class Main {
             case 0:
                 System.exit(0);
             case 1:
-                screen.showScreen("products");
-                int optionOne = screen.getInput();
-                handleProductOption(optionOne);
+                boolean keepOne = true;
+                do {
+                    try {
+                        screen.showScreen("products");
+                        int optionOne = screen.getInput();
+                        handleProductOption(optionOne);
+                        keepOne = false;
+                    } catch (Exception e) {
+                        screen.validation.setMessage("Opção inválida, tente novamente.");
+                    }
+                } while (keepOne);
+
                 break;
             case 2:
-                screen.showScreen("inventory");
-                int optionTwo = screen.getInput();
-                handleInventoryOption(optionTwo);
+                boolean keepTwo = true;
+                do {
+                    try {
+                        screen.showScreen("inventory");
+                        int optionTwo = screen.getInput();
+                        handleInventoryOption(optionTwo);
+                        keepTwo = false;
+                    } catch (Exception e) {
+                        screen.validation.setMessage("Opção inválida, tente novamente.");
+                    }
+                } while (keepTwo);
+
                 break;
             case 3:
-                screen.showScreen("price");
-                int optionThree = screen.getInput();
-                handlePriceOptions(optionThree);
+                boolean keepThree = true;
+                do {
+                    try {
+                        screen.showScreen("price");
+                        int optionThree = screen.getInput();
+                        handlePriceOptions(optionThree);
+                        keepThree = false;
+                    } catch (Exception e) {
+                        screen.validation.setMessage("Opção inválida, tente novamente.");
+                    }
+                } while (keepThree);
+
                 break;
             case 4:
+                boolean keepFour = true;
+                do {
+                    try {
+                        screen.showScreen("report");
+                        int optionFour = screen.getInput();
+                        handleReportOptions(optionFour);
+                        keepFour = false;
+                    } catch (Exception e) {
+                        screen.validation.setMessage("Opção inválida, tente novamente.");
+                    }
+                } while (keepFour);
 
-                screen.showScreen("report");
-                int optionFour = screen.getInput();
-                handleReportOptions(optionFour);
                 break;
             default:
                 screen.show(String.format("Opção %d inválida", mainMenuOption));

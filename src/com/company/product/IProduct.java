@@ -1,6 +1,6 @@
 package com.company.product;
 
-import com.company.utils.Screen;
+import com.company.utils.Screen.Screen;
 
 public interface IProduct {
 

@@ -1,7 +1,7 @@
 package com.company.product;
 
 import com.company.inventory.Inventory;
-import com.company.utils.Screen;
+import com.company.utils.Screen.Screen;
 
 import java.util.*;
 
@@ -40,6 +40,7 @@ public class Product implements IProduct {
     public String getValidName(Screen screen) {
         boolean isValid = false;
         String name = "";
+
         while(!isValid) {
             if(this.name != null) {
                 name = screen.getInputString(String.format("Nome (%s): ", this.name));
@@ -179,11 +180,11 @@ public class Product implements IProduct {
 
     @Override
     public String toString() {
-        return "{\n\n" +
+        return "{\n" +
                 "\tNOME: " + this.name + "\n" +
                 "\tPREÇO: " + this.price + "\n" +
                 "\tUNIDADE: " + this.unit + "\n" +
-                "\tQUANTIDADE: " + this.quantity + "\n" +
+                "\tQUANTIDADE: " + this.quantity +
                 "\n}";
     }
 }
