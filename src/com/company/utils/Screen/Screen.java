@@ -1,18 +1,17 @@
 package com.company.utils.Screen;
 
 import com.company.utils.Validations.Validation;
-import com.company.utils.Validations.ValidationMessage;
-
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Screen implements IScreen {
     private Scanner read;
-    public final Validation validation;
+    public Validation validation;
 
-    public Screen() {
-        this.validation = new ValidationMessage();
-        this.read = new Scanner(System.in);
+    public Screen() {}
+
+    public Screen(Validation validations, Scanner read) {
+        this.validation = validations;
+        this.read = read;
     }
 
     public void showScreen(String screen) {
@@ -21,11 +20,13 @@ public class Screen implements IScreen {
             case "products" -> {
                 show("CADASTRO DE PRODUTOS\n");
                 show(
-                    "1 - INCLUSÃO\n" +
-                    "2 - ALTERAÇÃO\n" +
-                    "3 - CONSULTA\n" +
-                    "4 - EXCLUSÃO\n" +
-                    "0 - RETORNAR"
+                        """
+                        1 - INCLUSÃO
+                        2 - ALTERAÇÃO
+                        3 - CONSULTA
+                        4 - EXCLUSÃO
+                        0 - RETORNAR
+                        """
                 );
             }
             case "products-create" -> show("CADASTRO DE PRODUTOS - INCLUSÃO DE PRODUTO\n");
@@ -35,9 +36,11 @@ public class Screen implements IScreen {
             case "inventory" -> {
                 show("MOVIMENTAÇÃO\n");
                 show(
-                    "1 - ENTRADA\n" +
-                    "2 - SAÍDA\n" +
-                    "0 - RETORNAR"
+                        """
+                        1 - ENTRADA
+                        2 - SAÍDA
+                        0 - RETORNAR
+                        """
                 );
             }
             case "inventory-in" -> show("ENTRADA DE PRODUTO\n");
@@ -45,9 +48,11 @@ public class Screen implements IScreen {
             case "price" -> {
                 show("AJUSTE DE PREÇO\n");
                 show(
-                    "1 - AUMENTO\n" +
-                    "2 - REDUÇÃO\n" +
-                    "0 - RETORNAR"
+                        """
+                        1 - AUMENTO
+                        2 - REDUÇÃO
+                        0 - RETORNAR
+                        """
                 );
             }
             case "price-raise" -> show("AUMENTO DE PREÇO\n");
@@ -63,11 +68,13 @@ public class Screen implements IScreen {
             default -> {
                 show("MENU PRINCIPAL\n");
                 show(
-                    "1 - CADASTRO DE PRODUTOS\n" +
-                    "2 - MOVIMENTAÇÃO\n" +
-                    "3 - REAJUSTE DE PREÇOS\n" +
-                    "4 - RELATÓRIOS\n" +
-                    "0 - FINALIZAR"
+                        """
+                        1 - CADASTRO DE PRODUTOS
+                        2 - MOVIMENTAÇÃO
+                        3 - REAJUSTE DE PREÇOS
+                        4 - RELATÓRIOS
+                        0 - FINALIZAR
+                        """
                 );
             }
         }

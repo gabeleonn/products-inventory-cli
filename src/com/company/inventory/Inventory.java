@@ -8,10 +8,19 @@ import java.util.stream.Collectors;
 
 public class Inventory implements IInventory {
     List<Product> products = new ArrayList<>();
+    int size = 0;
 
+    public Inventory() {}
+
+    public int getSize() {
+        return this.size;
+    }
 
     public void create(Product product) {
-        this.products.add(product);
+        if(size <= 20) {
+            this.products.add(product);
+            this.size++;
+        }
     }
 
     public Product findOne(String name) {
@@ -49,22 +58,14 @@ public class Inventory implements IInventory {
     }
 
     public void update(Product newProduct, Product oldProduct) {
-        if (newProduct.getName().equals(oldProduct.getName())) {
-            this.products = this.products.stream().map(
-                    product -> {
-                        if(product.getName().equals(newProduct.getName())) {
-                            return newProduct;
-                        } else {
-                            return product;
-                        }
-                    }).collect(Collectors.toList());
-        } else {
-            this.products.removeIf(product -> product.getName().equals(oldProduct.getName()));
-            this.create(newProduct);
-        }
+        oldProduct.setName(newProduct.getName());
+        oldProduct.setPrice(newProduct.getPrice());
+        oldProduct.setQuantity(newProduct.getQuantity());
+        oldProduct.setUnit(newProduct.getUnit());
     }
 
     public void delete(String name) {
         this.products.removeIf(product -> product.getName().equals(name));
+        this.size--;
     }
 }

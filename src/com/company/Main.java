@@ -3,14 +3,21 @@ package com.company;
 import com.company.inventory.Inventory;
 import com.company.product.Product;
 import com.company.utils.Screen.Screen;
+import com.company.utils.Validations.Validation;
+import com.company.utils.Validations.ValidationMessage;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-    private static final Screen screen = new Screen();
-    private static final Inventory inventory = new Inventory();
+    private static Screen screen;
+    private static Inventory inventory;
 
     public static void main(String[] args) {
+        Validation validations = new ValidationMessage();
+        Scanner scanner = new Scanner(System.in);
+        screen = new Screen(validations, scanner);
+        inventory = new Inventory();
         boolean keep = true;
 
         do {
@@ -232,36 +239,48 @@ public class Main {
             case 1 -> {
                 boolean keepOne = true;
                 while (keepOne) {
-                    screen.showScreen("products-create");
-                    Product product = new Product(inventory).builder(screen);
+                    if(inventory.getSize() <= 20) {
+                        screen.showScreen("products-create");
+                        Product product = new Product(inventory).builder(screen);
 
-                    if (screen.getInputConfirmation() == 1) {
-                        inventory.create(product);
+                        if (screen.getInputConfirmation() == 1) {
+                            inventory.create(product);
 
-                        if (screen.getRepeatOperation() == 0) {
-                            keepOne = false;
-                            handleMainMenuOption(1);
+                            if (screen.getRepeatOperation() == 0) {
+                                keepOne = false;
+                                handleMainMenuOption(1);
+                            }
                         }
+                    } else {
+                        keepOne = false;
+                        screen.validation.setMessage("Inventário está cheio.");
+                        handleMainMenuOption(1);
                     }
                 }
             }
             case 2 -> {
                 boolean keepTwo = true;
                 while (keepTwo) {
-                    screen.showScreen("products-update");
-                    String name = screen.getInputString("Digite o nome do produto: ");
-                    Product oldProduct = inventory.findOne(name);
+                    if (inventory.getSize() > 0) {
+                        screen.showScreen("products-update");
+                        String name = screen.getInputString("Digite o nome do produto: ");
+                        Product oldProduct = inventory.findOne(name);
 
-                    if (oldProduct != null) {
-                        Product newProduct = oldProduct.update(screen);
-                        if (screen.getInputConfirmation() == 1) {
-                            inventory.update(newProduct, oldProduct);
+                        if (oldProduct != null) {
+                            Product newProduct = oldProduct.update(screen);
+                            if (screen.getInputConfirmation() == 1) {
+                                inventory.update(newProduct, oldProduct);
+                            }
+                        } else {
+                            screen.show("Produto não encontrado.");
+                        }
+
+                        if (screen.getRepeatOperation() == 0) {
+                            keepTwo = false;
+                            handleMainMenuOption(1);
                         }
                     } else {
-                        screen.show("Produto não encontrado.");
-                    }
-
-                    if (screen.getRepeatOperation() == 0) {
+                        screen.validation.setMessage("O inventário está vazio.");
                         keepTwo = false;
                         handleMainMenuOption(1);
                     }
@@ -270,16 +289,22 @@ public class Main {
             case 3 -> {
                 boolean keepThree = true;
                 while (keepThree) {
-                    screen.showScreen("products-read");
-                    String name = screen.getInputString("Digite o nome do produto: ");
-                    Product product = inventory.findOne(name);
-                    if (product != null) {
-                        screen.show(product.toString());
-                    } else {
-                        screen.show("Produto não encontrado.");
-                    }
+                    if (inventory.getSize() > 0) {
+                        screen.showScreen("products-read");
+                        String name = screen.getInputString("Digite o nome do produto: ");
+                        Product product = inventory.findOne(name);
+                        if (product != null) {
+                            screen.show(product.toString());
+                        } else {
+                            screen.show("Produto não encontrado.");
+                        }
 
-                    if (screen.getRepeatOperation() == 0) {
+                        if (screen.getRepeatOperation() == 0) {
+                            keepThree = false;
+                            handleMainMenuOption(1);
+                        }
+                    } else {
+                        screen.validation.setMessage("O inventário está vazio.");
                         keepThree = false;
                         handleMainMenuOption(1);
                     }
@@ -288,19 +313,25 @@ public class Main {
             case 4 -> {
                 boolean keepFour = true;
                 while (keepFour) {
-                    screen.showScreen("products-delete");
-                    String name = screen.getInputString("Digite o nome do produto: ");
-                    Product product = inventory.findOne(name);
-                    if (product != null) {
-                        screen.show(product.toString());
-                        if (screen.getInputConfirmation() == 1) {
-                            inventory.delete(name);
+                    if (inventory.getSize() > 0) {
+                        screen.showScreen("products-delete");
+                        String name = screen.getInputString("Digite o nome do produto: ");
+                        Product product = inventory.findOne(name);
+                        if (product != null) {
+                            screen.show(product.toString());
+                            if (screen.getInputConfirmation() == 1) {
+                                inventory.delete(name);
+                            }
+                        } else {
+                            screen.show("Produto não encontrado.");
+                        }
+
+                        if (screen.getRepeatOperation() == 0) {
+                            keepFour = false;
+                            handleMainMenuOption(1);
                         }
                     } else {
-                        screen.show("Produto não encontrado.");
-                    }
-
-                    if (screen.getRepeatOperation() == 0) {
+                        screen.validation.setMessage("O inventário está vazio.");
                         keepFour = false;
                         handleMainMenuOption(1);
                     }

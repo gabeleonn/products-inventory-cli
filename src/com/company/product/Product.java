@@ -46,10 +46,12 @@ public class Product implements IProduct {
                 name = screen.getInputString(String.format("Nome (%s): ", this.name));
                 if(name.isBlank()) {
                     name = this.name;
+                    break;
                 }
             } else {
                 name = screen.getInputString("Nome: ");
             }
+
             if(!inventory.exists(name) && !name.isBlank()) {
                 isValid = true;
             } else {
@@ -64,7 +66,7 @@ public class Product implements IProduct {
         Double price = 0.00;
         while(!isValid) {
             try {
-                String input = "";
+                String input;
 
                 if(this.price != null) {
                     input = screen.getInputString(String.format("Price (%s): ", this.price));
@@ -108,7 +110,7 @@ public class Product implements IProduct {
             if(validUnits.contains(unit)) {
                 isValid = true;
             } else {
-                screen.show("Opa, só essas unidades são válidas " + validUnits.toString());
+                screen.show("Opa, só essas unidades são válidas " + validUnits);
             }
         }
         return unit;
@@ -119,7 +121,7 @@ public class Product implements IProduct {
         int quantity = 0;
         while(!isValid) {
             try {
-                String input = null;
+                String input;
                 if(this.unit != null) {
                     input = screen.getInputString(String.format("Quantidade (%d): ", this.quantity));
                     if(input.isBlank()) {

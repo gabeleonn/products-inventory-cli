@@ -25,4 +25,6 @@ public interface IInventory {
     void raisePrice(Product product, Double percentage);
 
     void lowerPrice(Product product, Double percentage);
+
+    int getSize();
 }
