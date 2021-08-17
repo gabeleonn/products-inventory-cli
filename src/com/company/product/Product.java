@@ -30,7 +30,6 @@ public class Product implements IProduct {
 
     public Product update(Screen screen) {
         Product newProduct = new Product(inventory);
-        newProduct.setName(this.getValidName(screen));
         newProduct.setPrice(this.getValidPrice(screen));
         newProduct.setUnit(this.getValidUnit(screen));
         newProduct.setQuantity(this.getValidQuantity(screen));

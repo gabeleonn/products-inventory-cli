@@ -58,7 +58,6 @@ public class Inventory implements IInventory {
     }
 
     public void update(Product newProduct, Product oldProduct) {
-        oldProduct.setName(newProduct.getName());
         oldProduct.setPrice(newProduct.getPrice());
         oldProduct.setQuantity(newProduct.getQuantity());
         oldProduct.setUnit(newProduct.getUnit());
