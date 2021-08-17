@@ -30,6 +30,7 @@ public class Product implements IProduct {
 
     public Product update(Screen screen) {
         Product newProduct = new Product(inventory);
+        screen.show(this.toString());
         newProduct.setPrice(this.getValidPrice(screen));
         newProduct.setUnit(this.getValidUnit(screen));
         newProduct.setQuantity(this.getValidQuantity(screen));
@@ -68,14 +69,14 @@ public class Product implements IProduct {
                 String input;
 
                 if(this.price != null) {
-                    input = screen.getInputString(String.format("Price (%s): ", this.price));
+                    input = screen.getInputString(String.format("Preço (R$ %s): R$ ", this.price));
                     if(input.isBlank()) {
                         price = this.price;
                     } else {
                         price = Double.parseDouble(input);
                     }
                 } else {
-                    input = screen.getInputString("Preço: ");
+                    input = screen.getInputString("Preço: R$ ");
                     price = Double.parseDouble(input);
                 }
 
@@ -183,7 +184,7 @@ public class Product implements IProduct {
     public String toString() {
         return "{\n" +
                 "\tNOME: " + this.name + "\n" +
-                "\tPREÇO: " + this.price + "\n" +
+                "\tPREÇO: R$ " + this.price + "\n" +
                 "\tUNIDADE: " + this.unit + "\n" +
                 "\tQUANTIDADE: " + this.quantity +
                 "\n}";
